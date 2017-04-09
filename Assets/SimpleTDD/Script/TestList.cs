@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SimpleTDD;
 
-public class SimpleTDDTestList : MonoBehaviour {
+namespace SimpleTDD {
+
+public class TestList : MonoBehaviour {
 	public string[] testSceneList;
-	public SimpleTDDListButton buttonPrefab;
+	public TestListButton buttonPrefab;
 	public Transform contentPanel;
 	private ScrollRect mScrollRect;
 
@@ -50,10 +53,10 @@ public class SimpleTDDTestList : MonoBehaviour {
 		foreach(string test in mTestList) {
 			// Debug.Log("test: " + test);
 
-			SimpleTDDListButton button = Instantiate(buttonPrefab, Vector3.zero, Quaternion.identity);
+			TestListButton button = Instantiate(buttonPrefab, Vector3.zero, Quaternion.identity);
 			button.transform.SetParent(contentPanel);
 
-			SimpleTDDHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
+			UIHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
 
 //			RectTransform rectTrans = button.GetComponent<RectTransform>();
 //			rectTrans.anchorMax = new Vector2(0, 1);
@@ -99,4 +102,6 @@ public class SimpleTDDTestList : MonoBehaviour {
 
 		}
 	}
+}
+
 }

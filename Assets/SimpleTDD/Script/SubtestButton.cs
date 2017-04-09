@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SimpleTDDSubtestButton : MonoBehaviour {
-	public SimpleTDDTest testOwner = null;
+namespace SimpleTDD { 
+
+public class SubtestButton : MonoBehaviour {
+	public TDDTest testOwner = null;
 	public bool isBackButton = false;
 
 	// Use this for initialization
@@ -32,7 +34,7 @@ public class SimpleTDDSubtestButton : MonoBehaviour {
 
 	private void BackToMain()
 	{
-		SceneManager.LoadScene(SimpleTDDConst.MAIN_SCENE_NAME);
+		SceneManager.LoadScene(SimpleTDD.Const.MAIN_SCENE_NAME);
 	}
 
 
@@ -49,4 +51,6 @@ public class SimpleTDDSubtestButton : MonoBehaviour {
 			testOwner.RunTest(testName);
 		}
 	}
+}
+
 }

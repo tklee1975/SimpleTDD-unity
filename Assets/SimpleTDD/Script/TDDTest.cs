@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SimpleTDD;
 
-public class SimpleTDDTest : MonoBehaviour {
-	public SimpleTDDBaseTest testCase = null;
-	public SimpleTDDSubtestButton subtestButtonPrefab;
+namespace SimpleTDD {
+
+public class TDDTest : MonoBehaviour {
+	public SimpleTDD.BaseTest testCase = null;
+	public SimpleTDD.SubtestButton subtestButtonPrefab;
 	public Transform contentPanel;
 
 	// Use this for initialization
@@ -29,10 +32,10 @@ public class SimpleTDDTest : MonoBehaviour {
 		float spacing = 5;
 
 		// Add Back
-		SimpleTDDSubtestButton backButton = Instantiate(subtestButtonPrefab, 
+		SubtestButton backButton = Instantiate(subtestButtonPrefab, 
 			Vector3.zero, Quaternion.identity);
 		backButton.transform.SetParent(contentPanel);
-		SimpleTDDHelper.SetUIObjectTopLeftPostion(backButton.gameObject, position);
+		UIHelper.SetUIObjectTopLeftPostion(backButton.gameObject, position);
 		backButton.SetTest("back");
 		backButton.isBackButton = true;
 		position.x += 90;
@@ -41,13 +44,13 @@ public class SimpleTDDTest : MonoBehaviour {
 
 		foreach(string test in testList) {
 
-				SimpleTDDSubtestButton button = Instantiate(subtestButtonPrefab, 
+				SubtestButton button = Instantiate(subtestButtonPrefab, 
 					Vector3.zero, Quaternion.identity);
 			button.transform.SetParent(contentPanel);
 			button.SetTest(test);
 
 
-			SimpleTDDHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
+			UIHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
 
 			button.testOwner = this;
 
@@ -82,4 +85,6 @@ public class SimpleTDDTest : MonoBehaviour {
 		Debug.Log("Testing " + testName);
 		testCase.RunTest(testName);
 	}
+}
+
 }

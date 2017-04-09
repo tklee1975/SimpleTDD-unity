@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenTest : SimpleTDDBaseTest {
+public class ScreenTest : SimpleTDD.BaseTest {
 
 	protected override void SetupTest(List<string> testList)
 	{

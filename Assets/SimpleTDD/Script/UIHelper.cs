@@ -2,8 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
-public class SimpleTDDHelper
+namespace SimpleTDD {
+public class UIHelper
 {
 	public static void SetUIObjectTopLeftPostion(GameObject obj, Vector2 position)
 	{
@@ -18,5 +18,7 @@ public class SimpleTDDHelper
 		rectTrans.localPosition = pos3;
 
 	}
+}
+
 }
 

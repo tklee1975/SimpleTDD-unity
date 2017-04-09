@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SimpleTDDListButton : MonoBehaviour {
+namespace SimpleTDD { 
+
+public class TestListButton : MonoBehaviour {
 	private string mTestName;
 
 	// Use this for initialization
@@ -35,4 +37,5 @@ public class SimpleTDDListButton : MonoBehaviour {
 		Debug.Log("RunTest: name=" + mTestName);
 		SceneManager.LoadScene(mTestName);
 	}
+}
 }
