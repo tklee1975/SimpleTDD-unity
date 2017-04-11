@@ -13,8 +13,14 @@ public class TDDTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//testCase = GetComponent<DemoTest3>();
+			testCase = FindObjectOfType<BaseTest>();
+			Debug.Log("TestCase object=" + testCase);
+
 		if(testCase == null) {
-			Debug.LogError("SimpleTDDTest: testCase undefined");
+			Debug.LogError("SimpleTDDTest: testCase undefined.\n"
+				+ "Please create using Assets/Create/Simple TDD Script");
+			return;
 		}
 		List<string> testList = testCase.GetSubTestList();
 		CreateSubtestButton(testList);
@@ -31,7 +37,7 @@ public class TDDTest : MonoBehaviour {
 		float buttonHeight = 30;
 		float contentWidth = Screen.width;		// TODO
 		float spacing = 5;
-		float rightBound = contentWidth - spacing - 20;
+		float rightBound = contentWidth - spacing - 10;
 
 		// Add Back
 		SubtestButton backButton = Instantiate(subtestButtonPrefab, 
