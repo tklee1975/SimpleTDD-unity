@@ -7,6 +7,25 @@ using SimpleTDD;
 public class CollisionTest : BaseTest {
 	public GameObject starPrefab;
 
+
+	private List<GameObject> GetStarList()
+	{
+		GameObject parent = GameObject.Find("PlaySpace");
+
+		List<GameObject> starList = new List<GameObject>();
+		int numChild = parent.transform.childCount;
+		for(int i=0; i<numChild; i++) {
+			Transform t = parent.transform.GetChild(i);
+			GameObject obj = t.gameObject;
+			if(obj.name.StartsWith("Star") == false) {
+				continue;
+			}
+			starList.Add(obj);
+		}
+
+		return starList;
+	}
+
 	[Test]
 	public void ClearStar()
 	{
@@ -41,4 +60,21 @@ public class CollisionTest : BaseTest {
 			
 	//	Instantiate(
 	}
+
+	[Test]
+	public void AddForce()
+	{
+		List<GameObject> starList = GetStarList();
+
+		foreach(GameObject starObj in starList) {
+			Rigidbody2D body = starObj.GetComponent<Rigidbody2D>();
+
+			float forceX = Random.Range(-4, 4) * 100;
+			float forceY = Random.Range(-4, 4) * 100;
+
+			body.AddForce(new Vector2(forceX, forceY));
+		}
+
+	}
+
 }

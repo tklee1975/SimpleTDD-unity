@@ -28,8 +28,10 @@ public class TDDTest : MonoBehaviour {
 		Vector2 position = new Vector3(5, -5);		// Top Left corner
 
 		float buttonWidth = 80;
+		float buttonHeight = 30;
 		float contentWidth = Screen.width;		// TODO
 		float spacing = 5;
+		float rightBound = contentWidth - spacing - 20;
 
 		// Add Back
 		SubtestButton backButton = Instantiate(subtestButtonPrefab, 
@@ -38,8 +40,9 @@ public class TDDTest : MonoBehaviour {
 		UIHelper.SetUIObjectTopLeftPostion(backButton.gameObject, position);
 		backButton.SetTest("back");
 		backButton.isBackButton = true;
-		position.x += 90;
+		position.x += buttonWidth + spacing;
 
+			Debug.Log("DEBUG: ScreenWidth=" +contentWidth);
 		// Add custom test
 
 		foreach(string test in testList) {
@@ -56,9 +59,11 @@ public class TDDTest : MonoBehaviour {
 
 			position.x += buttonWidth+spacing;
 
-			if((position.x + buttonWidth) >= contentWidth) {
+			Debug.Log("DEBUG: position.x=" + position.x);
+
+			if((position.x + buttonWidth) >= rightBound) {
 				position.x = 5;
-				position.y -= 30;
+				position.y -= (buttonHeight + spacing);
 			}
 
 //
