@@ -48,9 +48,11 @@ After setting up the framework, you can do any test you want:
 
 Here are the steps to create new Testing Scene:
 - Copy a scene from SimpleTDD/Scene/SampleTest
-- Create a new game object with a proper name such as “DialogTest”
-- Select the game object just created and creata the Unit Test using “Assets/Create/SimpleTDD Test Script”
+- Setup the Unit Test using Menu 'GameObject/SimpleTDD Setup'
 - You now try the Test by click 'Play', the list of test buttons are based on the methods having attribute '[Test]' in your testing script
+
+# Supporting Version
+- Unity 5.6
 
 # Help and Support
 Free feel to contact me by facebook or twitter for any help or want to support me or want to have any new feature.

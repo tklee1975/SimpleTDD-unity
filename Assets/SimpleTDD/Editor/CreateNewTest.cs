@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System;
 using System.IO;
@@ -13,29 +14,61 @@ public class CreateNewTest {
 	const string NAME_CLASS_LABEL = "NewSimpleTDDTestCase";
 	public static bool AUTO_ADD_COMPONENT = false;
 
-	[MenuItem("Assets/Create/SimpleTDD Test Script")]
-	static void Create()
-	{
-		GameObject selected = Selection.activeObject as GameObject;
-		if (selected == null )
-		{
-			Debug.Log("Selected object not Valid");
-			return;
-		}
-		Debug.Log("Selected object=" + selected.name);
 
-		// Filename
-		string className = selected.name.Replace(" ","");
-	
-		string filename = "Assets/UnitTest/"+className+".cs";
+	[MenuItem("GameObject/SimpleTDD Setup")]
+	static void SetupTest()
+	{
+		// http://answers.unity3d.com/questions/14637/get-the-currently-open-scene-name-or-file-name.html
+		Scene scene = SceneManager.GetActiveScene();
+
+		string className = scene.name;
+			//"QuickTest";
+
+		// 1. Create the Test Script 
+		CreateTestScript(className);
+
+		// 2. Create the GameObject 
+		CreateTestObject(className);
+
+		// 3. Refresh and bind GameObject to Script
+		AddComponent(className);
+	}
+
+	static string GetTestScriptFilename(string className) {
+		return "Assets/UnitTest/"+className+".cs";
+	}
+
+	static void AddComponent(string className) {
+		// @BMayne’s amazing suggestion, set the name for later reference.
+		EditorPrefs.SetString (NAME_CLASS_LABEL, className);
+
+		// You probably don’t need to do both of these, but I’m just making sure.
+		// (Experiment with the ones you might or might not need)
+		Debug.Log("SimpleTDD: refreshing to attach component to gameobject. Please wait");
+		AssetDatabase.Refresh (ImportAssetOptions.ForceUpdate 
+			| ImportAssetOptions.ForceUncompressedImport );
+	}
+
+	static void CreateTestObject(string className)
+	{
+		// Remove the object before create
+		GameObject go = GameObject.Find(className);
+		if(go == null) {
+			go = new GameObject(className);
+		}
+		go.transform.position = new Vector3(0,0,0);
+	}
+
+	// Just Create the Script, not refresh
+	static bool CreateTestScript(string className)
+	{
+		string filename = GetTestScriptFilename(className);
 
 		// 
 		if( File.Exists(filename) ){
-			Debug.Log("Test Script already exists");
-//			Type classType = SimpleTDDEditorHelper.GetType("UnitTest/" + className);
-//			Debug.Log("classType=" + classType + " className=" + className);
-//			selected.AddComponent(classType);
-			return;
+			Debug.Log("SimpleTDD Setup: Test Script with name '" + className + "' already exist");
+			AssetDatabase.ImportAsset (filename);
+			return false;
 		}
 
 		string content = GetScriptContent(className);
@@ -46,32 +79,22 @@ public class CreateNewTest {
 			outfile.WriteLine(content);
 		}
 
+		AssetDatabase.ImportAsset (filename);
 
-		ImportAsset(className, filename);	
+		return true;
 	}
 
-	static void ImportAsset(string className, string scriptPath)
-	{
-		// @BMayne’s amazing suggestion, set the name for later reference.
-		EditorPrefs.SetString (NAME_CLASS_LABEL, className);
 
-		// You probably don’t need to do both of these, but I’m just making sure.
-		// (Experiment with the ones you might or might not need)
-		AssetDatabase.ImportAsset (scriptPath);
-		if(AUTO_ADD_COMPONENT) {
-			AssetDatabase.Refresh (ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceUncompressedImport );
-		}
-	}
 
 
 	[UnityEditor.Callbacks.DidReloadScripts]
 	private static void ScriptReloaded() 
 	{
-		Debug.Log("ScriptReloaded!!");
+		Debug.Log("SimpleTDD: ScriptReloaded!!");
 		// If the key doesn’t exist, don’t bother, as we’re not generating stuff.
 		if (!EditorPrefs.HasKey (NAME_CLASS_LABEL))
 		{
-			Debug.Log("ScriptReloaded: No key found");
+			Debug.Log("SimpleTDD Setup: No key found");
 			return;
 		}
 
@@ -81,6 +104,8 @@ public class CreateNewTest {
 
 		//Delete the key because we don’t need it anymore!
 		EditorPrefs.DeleteKey(NAME_CLASS_LABEL);
+
+		Debug.Log("SimpleTDD: Test Setup success");
 	}
 
 	static void AddGeneratedComponent(string objectName, string typeName)
@@ -89,7 +114,7 @@ public class CreateNewTest {
 
 		if (go == null)
 		{
-			Debug.Log("AddGeneratedComponent: No game object found");
+			Debug.Log("SimpleTDD Setup: No game object found");
 			return;
 		}
 		// Get the new type from the reloaded assembly!

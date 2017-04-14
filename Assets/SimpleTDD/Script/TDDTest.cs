@@ -10,6 +10,10 @@ public class TDDTest : MonoBehaviour {
 	public SimpleTDD.BaseTest testCase = null;
 	public SimpleTDD.SubtestButton subtestButtonPrefab;
 	public Transform contentPanel;
+	public float buttonWidth = 80;
+	public float buttonHeight = 30;
+	public float buttonSpacing = 5;
+
 
 	// Use this for initialization
 	void Start () {
@@ -33,10 +37,8 @@ public class TDDTest : MonoBehaviour {
 	{
 		Vector2 position = new Vector3(5, -5);		// Top Left corner
 
-		float buttonWidth = 80;
-		float buttonHeight = 30;
 		float contentWidth = Screen.width;		// TODO
-		float spacing = 5;
+		float spacing = buttonSpacing;
 		float rightBound = contentWidth - spacing - 10;
 
 		// Add Back
@@ -48,7 +50,7 @@ public class TDDTest : MonoBehaviour {
 		backButton.isBackButton = true;
 		position.x += buttonWidth + spacing;
 
-			Debug.Log("DEBUG: ScreenWidth=" +contentWidth);
+		Debug.Log("DEBUG: ScreenWidth=" +contentWidth);
 		// Add custom test
 
 		foreach(string test in testList) {

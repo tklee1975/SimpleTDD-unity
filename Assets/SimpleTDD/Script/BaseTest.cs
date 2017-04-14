@@ -10,7 +10,7 @@ namespace SimpleTDD {
 public abstract class BaseTest : MonoBehaviour {
 
 
-	protected virtual void SetupTest(List<string> testList) {} // old style to add test methods
+	protected virtual void SetupTest(List<string> testList) {} // Can use to test scrolling
 
 	public void RunTest(string testMethodName)
 	{
