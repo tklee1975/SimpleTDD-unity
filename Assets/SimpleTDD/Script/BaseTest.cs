@@ -12,6 +12,12 @@ public abstract class BaseTest : MonoBehaviour {
 
 	protected virtual void SetupTest(List<string> testList) {} // Can use to test scrolling
 
+	
+	// 
+	protected virtual void WillRunTest(string testName) {} 
+	protected virtual void DidRunTest(string testName) {} 
+
+	// 
 	public void RunTest(string testMethodName)
 	{
 		System.Type thisType = this.GetType();
@@ -22,7 +28,12 @@ public abstract class BaseTest : MonoBehaviour {
 			return;
 		}
 
+		WillRunTest(testMethodName);
+
+		// Create the given Method 
 		theMethod.Invoke(this, null);
+
+		DidRunTest(testMethodName);
 	}
 
 	public List<string> GetSubTestList()

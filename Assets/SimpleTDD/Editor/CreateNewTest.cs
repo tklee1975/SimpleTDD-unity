@@ -22,10 +22,12 @@ public class CreateNewTest {
 		Scene scene = SceneManager.GetActiveScene();
 
 		string className = scene.name;
+		string path = Path.GetDirectoryName(scene.path);
+		string unitTestPath = path + "/UnitTest";
 			//"QuickTest";
 
 		// 1. Create the Test Script 
-		CreateTestScript(className);
+		CreateTestScript(unitTestPath, className);
 
 		// 2. Create the GameObject 
 		CreateTestObject(className);
@@ -34,8 +36,20 @@ public class CreateNewTest {
 		AddComponent(className);
 	}
 
-	static string GetTestScriptFilename(string className) {
-		return "Assets/UnitTest/"+className+".cs";
+	static void SetupUnitTestPath(string path)
+	{
+		if(File.Exists(path)) {
+			return;
+		}
+
+		System.IO.Directory.CreateDirectory(path);
+	}
+
+	static string GetTestScriptFilename(string path, string className) {
+		//return "Assets/UnitTest/"+className+".cs";
+		Debug.Log("path=" + path);
+
+		return path + "/" + className + ".cs";
 	}
 
 	static void AddComponent(string className) {
@@ -60,9 +74,10 @@ public class CreateNewTest {
 	}
 
 	// Just Create the Script, not refresh
-	static bool CreateTestScript(string className)
+	static bool CreateTestScript(string path, string className)
 	{
-		string filename = GetTestScriptFilename(className);
+		SetupUnitTestPath(path);
+		string filename = GetTestScriptFilename(path, className);
 
 		// 
 		if( File.Exists(filename) ){

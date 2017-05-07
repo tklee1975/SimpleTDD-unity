@@ -4,6 +4,10 @@
 //	https://msdn.microsoft.com/en-us/library/ms173119.aspx
 
 // Dev History:
+//	0.3
+//	- Unit Test now create under the folder 'UnitTest' at the given Scene 	
+//	- 
+//	
 //	0.2 
 //	- Fixing the scaler of the Button Panel
 //	- Improve the script so that easier to setup the SimpleTDD Test
@@ -17,7 +21,7 @@ namespace SimpleTDD
 {
 public class Const
 {
-	public const string VERSION = "0.2";
+	public const string VERSION = "0.3";
 	public const string MAIN_SCENE_NAME = "SimpleTDDMain";
 }
 
