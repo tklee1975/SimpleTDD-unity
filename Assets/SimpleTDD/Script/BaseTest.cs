@@ -17,6 +17,14 @@ public abstract class BaseTest : MonoBehaviour {
 	protected virtual void WillRunTest(string testName) {} 
 	protected virtual void DidRunTest(string testName) {} 
 
+	private TDDTest mMainTestLogic;
+
+	void Awake() {
+			//mMainTestLogic = gameObject.GetComponent<TDDTest>();	
+			mMainTestLogic = GameObject.FindObjectOfType<TDDTest>();
+	}
+
+
 	// 
 	public void RunTest(string testMethodName)
 	{
@@ -90,10 +98,33 @@ public abstract class BaseTest : MonoBehaviour {
 				//Debug.Log("Test Method: " + m.Name);	
 				methodList.Add(m.Name);
 			}
-
 		}
 
 		return methodList.ToArray();
+	}
+
+		public void ShowScreenLog() {
+			if(mMainTestLogic != null) {
+				mMainTestLogic.ShowScreenLog();
+			}
+		}
+
+		public void HideScreenLog() {
+			if(mMainTestLogic != null) {
+				mMainTestLogic.HideScreenLog();
+			}
+		}
+
+		public void UpdateLog(string message) {
+			if(mMainTestLogic != null) {
+				mMainTestLogic.UpdateLog(message);
+			}
+		}
+
+	public void AppendLog(string message) {
+			if(mMainTestLogic != null) {
+				mMainTestLogic.AppendLog(message);
+			}
 	}
 }
 

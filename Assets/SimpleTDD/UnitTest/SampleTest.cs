@@ -4,18 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SimpleTDD;
 
-public class DemoTest4 : BaseTest {
-
-	protected override void DidRunTest(string testName)
-	{
-		Debug.Log("After running " + testName);
-	}
-
-	protected override void WillRunTest(string testName)
-	{
-		Debug.Log("Before running " + testName);
-	}
-
+public class SampleTest : BaseTest {
 	[Test]
 	public void test1()
 	{

@@ -6,123 +6,256 @@ using SimpleTDD;
 
 namespace SimpleTDD {
 
-public class TDDTest : MonoBehaviour {
-	public SimpleTDD.BaseTest testCase = null;
-	public SimpleTDD.SubtestButton subtestButtonPrefab;
-	public Transform contentPanel;
-	public float referenceWidth = 320;
-	public float buttonWidth = 80;
-	public float buttonHeight = 30;  // 40% of Width
-	public float buttonSpacing = 5;
+	public class TDDTest : MonoBehaviour {
+		//public SimpleTDD.BaseTest testCase = null;
+
+		public SimpleTDD.SubtestButton subtestButtonPrefab;
+
+		public Transform contentPanel;
+		public float referenceWidth = 320;
+		public float buttonWidth = 80;
+		public float buttonHeight = 30;  // 40% of Width
+		public float buttonSpacing = 5;
 
 
-	// Use this for initialization
-	void Start () {
-		
-		CanvasScaler scaler = GameObject.Find("TDDMenu").GetComponent<CanvasScaler>();
-		referenceWidth = scaler.referenceResolution.x;
+		public Dictionary<string, BaseTest> mTestDictionary = new Dictionary<string, BaseTest>();
 
-		//testCase = GetComponent<DemoTest3>();
-			testCase = FindObjectOfType<BaseTest>();
-			Debug.Log("TestCase object=" + testCase);
 
-		if(testCase == null) {
-			Debug.LogError("SimpleTDDTest: testCase undefined.\n"
-				+ "Please create using Assets/Create/Simple TDD Script");
-			return;
+		private Transform mLogPanelTF;
+		private Text mLogText;
+
+		void Awake() {
+			// setup the Log Panel 
+			// Logging Panel and Text
+			mLogPanelTF = transform.Find("LogPanel");
+			Debug.Log("Awake: mLogPanel=" + mLogPanelTF);
+			if(mLogPanelTF != null) {
+				mLogText = mLogPanelTF.Find("LogText").GetComponent<Text>();
+			} else {
+				mLogText = null;
+			}
+			HideScreenLog();
+
+			// button size
+			ObtainButtonSize();
 		}
 
-		//CalculateButtonSize();
+		protected void ObtainButtonSize() {
+			if(subtestButtonPrefab == null) {
+				return;
+			}
 
-		List<string> testList = testCase.GetSubTestList();
-		CreateSubtestButton(testList);
+			RectTransform rectTransform = subtestButtonPrefab.GetComponent<RectTransform>();
 
-		
-//		foreach(string test in testList) {
-//			Debug.Log("test=" + test);
-//		}
-	}
+			buttonWidth = rectTransform.sizeDelta.x;
+			buttonHeight = rectTransform.sizeDelta.y;
 
-//	private void CalculateButtonSize() {
-//		float buttonPanelWidth = Screen.width;		// TODO: find the actual
-//		int numButtonPerRow = 8;
-//
-//		buttonWidth = (buttonPanelWidth / numButtonPerRow) - buttonSpacing;
-//		buttonHeight = (int)(buttonWidth * 0.4f);
-//
-//			Debug.Log("Screen.width=" + Screen.width);
-//			Debug.Log("Screen.currentResolution=" + Screen.currentResolution);
-//			Debug.Log("Screen.dpi=" + Screen.dpi);
-//		
-//		Debug.Log("ButtonSize: " + buttonWidth + "," + buttonHeight);
-//	}
+		}
 
-	private void CreateSubtestButton(List<string> testList)
-	{
-		Vector2 position = new Vector3(5, -5);		// Top Left corner
+		private bool AddTestEntity(BaseTest testClass, string testName)
+		{
+			if(mTestDictionary.ContainsKey(testName)) {
+				Debug.LogError("TDDTest: adding test already exists: testName=" + testName);
+				return false;	//
+			}
 
-		float contentWidth = referenceWidth - 20;		// TODO
-		float spacing = buttonSpacing;
-		float rightBound = contentWidth - spacing - 10;
+			mTestDictionary.Add(testName, testClass);
 
-		// Add Back
-		SubtestButton backButton = Instantiate(subtestButtonPrefab, 
-			Vector3.zero, Quaternion.identity);
-			
-		backButton.transform.SetParent(contentPanel, false);
-		UIHelper.SetUIObjectTopLeftPostion(backButton.gameObject, position);
-		backButton.SetTest("back");
-		backButton.isBackButton = true;
-		position.x += buttonWidth + spacing;
+			return true;
+		}
 
-		// Debug.Log("DEBUG: ScreenWidth=" +contentWidth);
-		// Add custom test
+		void SetupTestCase() {
+			BaseTest[] testClassList = GameObject.FindObjectsOfType<BaseTest>();
 
-		foreach(string test in testList) {
+			List<string> allTests = new List<string>();
 
-				SubtestButton button = Instantiate(subtestButtonPrefab, 
-					Vector3.zero, Quaternion.identity);
+			// Register the test case
+			foreach(BaseTest testClass in testClassList) {
+
+				if(testClass == null) {
+					Debug.Log("SetupTest: testClass is null");
+					continue;
+				}
+
+				List<string> testList = testClass.GetSubTestList();
+				foreach(string testName in testList) {
+					if(AddTestEntity(testClass, testName)){
+						allTests.Add(testName);
+					}
+				}
+			}
+
+			// 
+			CreateSubtestButton(allTests);
+		}
+
+
+		// Use this for initialization
+		void Start () {
+			CanvasScaler scaler = GameObject.FindObjectOfType<CanvasScaler>();
+			//CanvasScaler scaler = GameObject.Find("TDDMenu").GetComponent<CanvasScaler>();
+			referenceWidth = scaler == null ? 400 : scaler.referenceResolution.x;
+
+			// Setup the Test 
+			//Invoke("SetupTestCase", 1);
+			SetupTestCase();
+		}
+
+		private void AddTestButton(string testName, Vector2 position)
+		{
+			SubtestButton button = Instantiate(subtestButtonPrefab);
 			button.transform.SetParent(contentPanel, false);
-			button.SetTest(test);
-
-
-			UIHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
+			button.SetTest(testName);
 
 			button.testOwner = this;
 
-			position.x += buttonWidth+spacing;
+			UIHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
+		}
 
-			//Debug.Log("DEBUG: position.x=" + position.x);
-
-			if((position.x + buttonWidth) >= rightBound) {
-				position.x = 5;
-				position.y -= (buttonHeight + spacing);
+		private float GetContentWidth() 
+		{
+			if(contentPanel == null) {
+				return 400;
 			}
 
+			RectTransform rectTrans = contentPanel as RectTransform;
+			return rectTrans.rect.size.x;
+		}
+
+		private void UpdateScrollViewHeight(float height)
+		{
+			RectTransform rectTrans = contentPanel as RectTransform;
+			Vector2 size = rectTrans.sizeDelta;
+			Debug.Log("UpdateScrollViewHeight: sizeDelta: size=" + size);
+
+			size.y = height;
+			rectTrans.sizeDelta = size;
+
+//			Rect rect = rectTrans.rect;
+//			rect.height = height;
+//			rectTrans.
+
+
 //
-//			RectTransform rectTrans = button.GetComponent<RectTransform>();
-//			rectTrans.anchorMax = new Vector2(0, 1);
-//			rectTrans.anchorMin = new Vector2(0, 1);
-//			rectTrans.localPosition = position;
-//			button.GetComponent<RectTransform>().localPosition = position;
+//			Vector2 sizeDelta = rectTrans.re
+//		
 //
-//			button.SetTest(test);
+//				rectSize.y = height;
 //
-//			position.y -= 50;
+//			rectTrans.rect.size = rectSize;
+			//rectTrans.rect.height = height;
+		}
+
+		private void CreateSubtestButton(List<string> testList)
+		{
+			Vector2 position = new Vector3(0, -buttonSpacing);		// Top Left corner
+
+			float width = GetContentWidth();
+			float spacing = buttonSpacing;
+			float usableWidth = width - 20;		// 20 is the scroll bar width 
+
+
+//		float contentWidth = referenceWidth - 20;		// TODO
+//
+//		float rightBound = contentWidth - spacing - 10;
+//
+//			Debug.Log("referenceWidth=" + referenceWidth + " width=" + width);
+//
+//			// Add Back
+//			SubtestButton backButton = Instantiate(subtestButtonPrefab, 
+//				Vector3.zero, Quaternion.identity);
+//				
+//			backButton.transform.SetParent(contentPanel, false);
+//			UIHelper.SetUIObjectTopLeftPostion(backButton.gameObject, position);
+//			backButton.SetTest("back");
+//			backButton.isBackButton = true;
+//			position.x += buttonWidth + spacing;
+//
+
+			float scrollHeight = spacing + buttonHeight;
+
+			foreach(string test in testList) {
+				AddTestButton(test, position);
+
+//				SubtestButton button = Instantiate(subtestButtonPrefab, 
+//						Vector3.zero, Quaternion.identity);
+//				button.transform.SetParent(contentPanel, false);
+//				button.SetTest(test);
+
+
+//				UIHelper.SetUIObjectTopLeftPostion(button.gameObject, position);
+//
+//				button.testOwner = this;
+//
+				position.x += buttonWidth+spacing;
+
+				//Debug.Log("DEBUG: position.x=" + position.x);
+
+				if((position.x + buttonWidth) >= usableWidth) {
+					position.x = 0;
+					position.y -= (buttonHeight + spacing);
+
+					scrollHeight += buttonHeight + spacing;
+				}
+			}
+
+			UpdateScrollViewHeight(scrollHeight);
 
 		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
 		
-	}
+		// Update is called once per frame
+		void Update () {
+			
+		}
 
-	public void RunTest(string testName)
-	{
-		Debug.Log("Testing " + testName);
-		testCase.RunTest(testName);
-	}
+		public void RunTest(string testName)
+		{
+			if(mTestDictionary.ContainsKey(testName) == false) {
+				Debug.Log("RunTest: [" + testName + "] not registered");
+				return;
+			}
+
+			BaseTest testClass = mTestDictionary[testName];
+
+			//Debug.Log("Testing " + testName);
+			testClass.RunTest(testName);
+		}
+
+#region Logging Message
+		public void ShowScreenLog() {
+			if(mLogPanelTF == null) {
+				return;
+			}
+			mLogPanelTF.gameObject.SetActive(true);
+		}
+
+		public void HideScreenLog() {
+			if(mLogPanelTF == null) {
+				return;
+			}
+			mLogPanelTF.gameObject.SetActive(false);
+		}
+
+		public void UpdateLog(string message) {
+			if(mLogText == null) {
+				return;
+			}
+
+			mLogText.text = message;
+		}
+
+		public void AppendLog(string message) {
+			if(mLogText == null) {
+				return;
+			}
+
+			string oldMessage = mLogText.text;
+
+			string newMessage = message + "\n" + oldMessage;
+
+			mLogText.text = newMessage;
+		}
+		#endregion
 }
 
 }

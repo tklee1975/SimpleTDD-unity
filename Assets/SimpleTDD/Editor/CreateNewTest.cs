@@ -11,7 +11,8 @@ using System.Text;
 // http://answers.unity3d.com/questions/1007004/generate-script-in-editor-script-and-gettype-retur.html
 
 public class CreateNewTest {
-	const string NAME_CLASS_LABEL = "NewSimpleTDDTestCase";
+	const string SCRIPT_NAME_LABEL = "NewSimpleTDDTestCaseScript";
+	const string OBJECT_NAME_LABEL = "NewSimpleTDDTestCaseObject";
 	public static bool AUTO_ADD_COMPONENT = false;
 
 
@@ -21,19 +22,24 @@ public class CreateNewTest {
 		// http://answers.unity3d.com/questions/14637/get-the-currently-open-scene-name-or-file-name.html
 		Scene scene = SceneManager.GetActiveScene();
 
-		string className = scene.name;
+
 		string path = Path.GetDirectoryName(scene.path);
 		string unitTestPath = path + "/UnitTest";
+
+		string objectName = scene.name;
+		string className = FindValidClassName(objectName, unitTestPath);
 			//"QuickTest";
+
+		Debug.Log("FinalName=" + className);
 
 		// 1. Create the Test Script 
 		CreateTestScript(unitTestPath, className);
 
 		// 2. Create the GameObject 
-		CreateTestObject(className);
+		CreateTestObject(objectName);
 
 		// 3. Refresh and bind GameObject to Script
-		AddComponent(className);
+		AddComponent(objectName, className);
 	}
 
 	static void SetupUnitTestPath(string path)
@@ -52,9 +58,10 @@ public class CreateNewTest {
 		return path + "/" + className + ".cs";
 	}
 
-	static void AddComponent(string className) {
+	static void AddComponent(string objectName, string className) {
 		// @BMayne’s amazing suggestion, set the name for later reference.
-		EditorPrefs.SetString (NAME_CLASS_LABEL, className);
+		EditorPrefs.SetString (SCRIPT_NAME_LABEL, className);
+		EditorPrefs.SetString (OBJECT_NAME_LABEL, objectName);
 
 		// You probably don’t need to do both of these, but I’m just making sure.
 		// (Experiment with the ones you might or might not need)
@@ -71,6 +78,21 @@ public class CreateNewTest {
 			go = new GameObject(className);
 		}
 		go.transform.position = new Vector3(0,0,0);
+	}
+
+	static string FindValidClassName(string className, string path)
+	{
+		for(int i=0; i<10; i++) {
+			string finalName = className + (i == 0 ? "" : "" + i);
+
+			string filename = GetTestScriptFilename(path, finalName);
+
+			if( File.Exists(filename) == false){
+				return finalName;
+			}
+		}
+
+		return className;
 	}
 
 	// Just Create the Script, not refresh
@@ -107,18 +129,28 @@ public class CreateNewTest {
 	{
 		Debug.Log("SimpleTDD: ScriptReloaded!!");
 		// If the key doesn’t exist, don’t bother, as we’re not generating stuff.
-		if (!EditorPrefs.HasKey (NAME_CLASS_LABEL))
+		if (!EditorPrefs.HasKey (SCRIPT_NAME_LABEL))
 		{
-			Debug.Log("SimpleTDD Setup: No key found");
+			Debug.Log("SimpleTDD Setup: script name undefined");
 			return;
 		}
 
+		if (!EditorPrefs.HasKey (OBJECT_NAME_LABEL))
+		{
+			Debug.Log("SimpleTDD Setup: object name undefined");
+			return;
+		}
+
+
 		// If they key does exist and the object doesn’t, it’s just a left over key.
-		string name = EditorPrefs.GetString (NAME_CLASS_LABEL);
-		AddGeneratedComponent(name, name);
+		string scriptName = EditorPrefs.GetString (SCRIPT_NAME_LABEL);
+		string objectName = EditorPrefs.GetString (OBJECT_NAME_LABEL);
+
+		AddGeneratedComponent(objectName, scriptName);
 
 		//Delete the key because we don’t need it anymore!
-		EditorPrefs.DeleteKey(NAME_CLASS_LABEL);
+		EditorPrefs.DeleteKey(SCRIPT_NAME_LABEL);
+		EditorPrefs.DeleteKey(OBJECT_NAME_LABEL);
 
 		Debug.Log("SimpleTDD: Test Setup success");
 	}
