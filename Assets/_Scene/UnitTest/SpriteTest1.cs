@@ -10,17 +10,29 @@ public class SpriteTest1 : BaseTest {
 	public bool autoRotate = false;
 	public float rotateSpeed = 10;
 
-	public void RotateSprite() {
+	public void RotateSprite(float angleDelta) {
 		Vector3 euler = spriteObject.transform.eulerAngles;
 
-		euler.z += rotateSpeed * Time.deltaTime;
+		euler.z += angleDelta;
 		spriteObject.transform.eulerAngles = euler;
 	}
 
 	void Update() {
 		if(autoRotate) {
-			RotateSprite();
+			RotateSprite (rotateSpeed * Time.deltaTime);
 		}
+	}
+
+	[Test]
+	public void RotateLeft()
+	{
+		RotateSprite (rotateSpeed);
+	}
+
+	[Test]
+	public void RotateRight()
+	{
+		RotateSprite (-rotateSpeed);
 	}
 
 	[Test]
