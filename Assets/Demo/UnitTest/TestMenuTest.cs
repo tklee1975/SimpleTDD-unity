@@ -24,6 +24,7 @@ public class TestMenuTest : BaseTest {
 	public void test1()
 	{
 		Debug.Log("###### TEST 1 ######");
+		
 	}
 
 	[Test]

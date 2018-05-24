@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using System.IO;
 using System.Text;
+using UnityEditor.SceneManagement;
 
 // Reference
 // http://answers.unity3d.com/questions/12599/editor-script-need-to-create-class-script-automati.html
@@ -16,8 +17,8 @@ public class CreateNewTest {
 	public static bool AUTO_ADD_COMPONENT = false;
 
 
-	[MenuItem("GameObject/SimpleTDD Setup")]
-	static void SetupTest()
+	[MenuItem("Window/SimpleTDD/Setup Test")]
+	public static void SetupTest()
 	{
 		// http://answers.unity3d.com/questions/14637/get-the-currently-open-scene-name-or-file-name.html
 		Scene scene = SceneManager.GetActiveScene();
@@ -172,6 +173,10 @@ public class CreateNewTest {
 		// Debug.Log("ScriptReloaded: AddGeneratedComponent=" + type);
 
 		go.AddComponent( type );
+
+		// Save Scene
+		Scene currentActiveScene = SceneManager.GetActiveScene ();
+		EditorSceneManager.SaveScene (currentActiveScene);
 	}
 
 
