@@ -5,127 +5,141 @@ using UnityEngine.UI;
 using System.Reflection;
 using SimpleTDD;
 
-namespace SimpleTDD { 
+namespace SimpleTDD
+{
 
-public abstract class BaseTest : MonoBehaviour {
-
-
-	protected virtual void SetupTest(List<string> testList) {} // Can use to test scrolling
-
-	
-	// 
-	protected virtual void WillRunTest(string testName) {} 
-	protected virtual void DidRunTest(string testName) {} 
-
-	private TDDTest mMainTestLogic;
-
-	void Awake() {
-			//mMainTestLogic = gameObject.GetComponent<TDDTest>();	
-			mMainTestLogic = GameObject.FindObjectOfType<TDDTest>();
-	}
+    public abstract class BaseTest : MonoBehaviour
+    {
 
 
-	// 
-	public void RunTest(string testMethodName)
-	{
-		System.Type thisType = this.GetType();
-		MethodInfo theMethod = thisType.GetMethod(testMethodName);
+        protected virtual void SetupTest(List<string> testList) { } // Can use to test scrolling
 
-		if(theMethod == null) {
-			Debug.Log("SimpleTDDBaseTest: RunTest: no such test " + testMethodName);
-			return;
-		}
 
-		WillRunTest(testMethodName);
+        // 
+        protected virtual void WillRunTest(string testName) { }
+        protected virtual void DidRunTest(string testName) { }
 
-		// Create the given Method 
-		theMethod.Invoke(this, null);
+        private TDDTest mMainTestLogic;
 
-		DidRunTest(testMethodName);
-	}
+        void Awake()
+        {
+            //mMainTestLogic = gameObject.GetComponent<TDDTest>();	
+            mMainTestLogic = GameObject.FindObjectOfType<TDDTest>();
+        }
 
-	public List<string> GetSubTestList()
-	{
-		// TODO
 
-		List<string> result = new List<string>();
+        // 
+        public void RunTest(string testMethodName)
+        {
+            System.Type thisType = this.GetType();
+            MethodInfo theMethod = thisType.GetMethod(testMethodName);
 
-		SetupTestsWithAttribute(result);
+            if (theMethod == null)
+            {
+                Debug.Log("SimpleTDDBaseTest: RunTest: no such test " + testMethodName);
+                return;
+            }
 
-		// Extra Testing (Old Fashion)
-		SetupTest(result);
-//		result.Add("test1");
-//		result.Add("test2");
-//		result.Add("test3");
-//		result.Add("test4");
+            WillRunTest(testMethodName);
 
-		return result;
-	}
+            // Create the given Method 
+            theMethod.Invoke(this, null);
 
-	private void SetupTestsWithAttribute(List<string> result)
-	{
-		System.Type type = this.GetType();
-		foreach (MethodInfo m in type.GetMethods())
-		{
-			//Debug.Log("Method detail: " + m.Name);
-			foreach (System.Attribute a in m.GetCustomAttributes(true))
-			{
-				SimpleTDD.Test test = a as SimpleTDD.Test;
-				if(null == test) {
-					continue;
-				}
-				//Debug.Log("Test Method: " + m.Name);	
-				result.Add(m.Name);
-			}
+            DidRunTest(testMethodName);
+        }
 
-		}
-	}
+        public List<string> GetSubTestList()
+        {
+            // TODO
 
-	public string[] GetTestMethods()
-	{
-		List<string> methodList = new List<string>();
+            List<string> result = new List<string>();
 
-		System.Type type = this.GetType();
-		foreach (MethodInfo m in type.GetMethods())
-		{
-			//Debug.Log("Method detail: " + m.Name);
-			foreach (System.Attribute a in m.GetCustomAttributes(true))
-			{
-				SimpleTDD.Test test = a as SimpleTDD.Test;
-				if(null == test) {
-					continue;
-				}
-				//Debug.Log("Test Method: " + m.Name);	
-				methodList.Add(m.Name);
-			}
-		}
+            SetupTestsWithAttribute(result);
 
-		return methodList.ToArray();
-	}
+            // Extra Testing (Old Fashion)
+            SetupTest(result);
+            //		result.Add("test1");
+            //		result.Add("test2");
+            //		result.Add("test3");
+            //		result.Add("test4");
 
-		public void ShowScreenLog() {
-			if(mMainTestLogic != null) {
-				mMainTestLogic.ShowScreenLog();
-			}
-		}
+            return result;
+        }
 
-		public void HideScreenLog() {
-			if(mMainTestLogic != null) {
-				mMainTestLogic.HideScreenLog();
-			}
-		}
+        private void SetupTestsWithAttribute(List<string> result)
+        {
+            System.Type type = this.GetType();
+            foreach (MethodInfo m in type.GetMethods())
+            {
+                //Debug.Log("Method detail: " + m.Name);
+                foreach (System.Attribute a in m.GetCustomAttributes(true))
+                {
+                    SimpleTDD.Test test = a as SimpleTDD.Test;
+                    if (null == test)
+                    {
+                        continue;
+                    }
+                    //Debug.Log("Test Method: " + m.Name);	
+                    result.Add(m.Name);
+                }
 
-		public void UpdateLog(string message) {
-			if(mMainTestLogic != null) {
-				mMainTestLogic.UpdateLog(message);
-			}
-		}
+            }
+        }
 
-	public void AppendLog(string message) {
-			if(mMainTestLogic != null) {
-				mMainTestLogic.AppendLog(message);
-			}
-	}
-}
+        public string[] GetTestMethods()
+        {
+            List<string> methodList = new List<string>();
+
+            System.Type type = this.GetType();
+            foreach (MethodInfo m in type.GetMethods())
+            {
+                //Debug.Log("Method detail: " + m.Name);
+                foreach (System.Attribute a in m.GetCustomAttributes(true))
+                {
+                    SimpleTDD.Test test = a as SimpleTDD.Test;
+                    if (null == test)
+                    {
+                        continue;
+                    }
+                    //Debug.Log("Test Method: " + m.Name);	
+                    methodList.Add(m.Name);
+                }
+            }
+
+            return methodList.ToArray();
+        }
+
+        public void ShowScreenLog()
+        {
+            if (mMainTestLogic != null)
+            {
+                mMainTestLogic.ShowScreenLog();
+            }
+        }
+
+        public void HideScreenLog()
+        {
+            if (mMainTestLogic != null)
+            {
+                mMainTestLogic.HideScreenLog();
+            }
+        }
+
+        public void UpdateLog(string message)
+        {
+            if (mMainTestLogic != null)
+            {
+                mMainTestLogic.UpdateLog(message);
+            }
+        }
+
+        public void AppendLog(string message)
+        {
+            if (mMainTestLogic != null)
+            {
+                mMainTestLogic.AppendLog(message);
+            }
+        }
+    }
 
 }

@@ -152,6 +152,7 @@ public class CreateNewTest {
 		EditorPrefs.DeleteKey(SCRIPT_NAME_LABEL);
 		EditorPrefs.DeleteKey(OBJECT_NAME_LABEL);
 
+		//EditorApplication.SaveScene();
 		Debug.Log("SimpleTDD: Test Setup success");
 	}
 

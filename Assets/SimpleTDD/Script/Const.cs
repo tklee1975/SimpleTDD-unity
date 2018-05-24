@@ -4,6 +4,10 @@
 //	https://msdn.microsoft.com/en-us/library/ms173119.aspx
 
 // Dev History:
+//  0.4 
+//	- Refactor the main code 
+//	- Simplified folder structure
+//	
 //	0.3
 //	- Unit Test now create under the folder 'UnitTest' at the given Scene 	
 //	- 
@@ -21,7 +25,7 @@ namespace SimpleTDD
 {
 public class Const
 {
-	public const string VERSION = "0.3";
+	public const string VERSION = "0.4";
 	public const string MAIN_SCENE_NAME = "SimpleTDDMain";
 }
 
