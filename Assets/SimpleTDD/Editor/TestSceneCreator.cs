@@ -24,7 +24,8 @@ namespace SimpleTDD
         protected readonly GUIContent mNameContent = new GUIContent ("New Scene Name");
 		protected readonly GUIContent mFolderContent = new GUIContent ("Test Folder Path");
     
-        [MenuItem("Window/SimpleTDD/Create New Test Scene...", priority = 100)]
+        //[MenuItem("Window/SimpleTDD/Create New Test Scene...", priority = 100)]
+		[MenuItem("Assets/Create/SimpleTDD/Test Scene", priority=100)]
         static void Init ()
         {
             TestSceneCreator window = GetWindow<TestSceneCreator> ();

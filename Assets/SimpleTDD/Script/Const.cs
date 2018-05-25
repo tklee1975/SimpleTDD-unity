@@ -4,6 +4,10 @@
 //	https://msdn.microsoft.com/en-us/library/ms173119.aspx
 
 // Dev History:
+//  0.5
+//	- Add Create Scene Function
+//	- Reposition the "Create" location, now at "Assets/Create/SimpleTDD"
+//
 //  0.4 
 //	- Refactor the main code 
 //	- Simplified folder structure
@@ -25,7 +29,7 @@ namespace SimpleTDD
 {
 	public class Const
 	{
-		public const string VERSION = "0.4";
+		public const string VERSION = "0.5";
 		public const string MAIN_SCENE_NAME = "SimpleTDDMain";
 	}
 
