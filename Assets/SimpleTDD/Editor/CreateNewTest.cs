@@ -18,7 +18,7 @@ namespace SimpleTDD
 		public static bool AUTO_ADD_COMPONENT = false;
 
 
-		[MenuItem("Window/SimpleTDD/Setup Test")]
+		[MenuItem("Window/SimpleTDD/Setup Test Object")]
 		public static void SetupTest()
 		{
 			// http://answers.unity3d.com/questions/14637/get-the-currently-open-scene-name-or-file-name.html
