@@ -4,38 +4,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-namespace SimpleTDD { 
+namespace SimpleTDD
+{
 
-public class TestListButton : MonoBehaviour {
-	private string mTestName;
+    public class TestListButton : MonoBehaviour
+    {
+        private string mTestName;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        // Use this for initialization
+        void Start()
+        {
 
-	public string GetTestName()
-	{
-		return mTestName;
-	}
+        }
 
-	public void SetTest(string name)
-	{
-		mTestName = name;
+        // Update is called once per frame
+        void Update()
+        {
 
-		Text text = GetComponentInChildren<Text>();
-		text.text = name;
-	}
+        }
 
-	public void RunTest()
-	{
-		Debug.Log("RunTest: name=" + mTestName);
-		SceneManager.LoadScene(mTestName);
-	}
-}
+        public string GetTestName()
+        {
+            return mTestName;
+        }
+
+        public void SetTest(string name)
+        {
+            mTestName = name;
+
+            Text text = GetComponentInChildren<Text>();
+            text.text = name;
+        }
+
+        public void RunTest()
+        {
+            Debug.Log("RunTest: name=" + mTestName);
+            SceneManager.LoadScene(mTestName);
+        }
+    }
 }

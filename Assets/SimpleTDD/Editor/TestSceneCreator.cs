@@ -126,7 +126,7 @@ namespace SimpleTDD
 		 static void CopySceneAndOpen(string sourceScene, string targetScene)
      	{
         	 FileUtil.CopyFileOrDirectory(sourceScene, targetScene);
-			 Scene newScene = EditorSceneManager.OpenScene(targetScene, OpenSceneMode.Single);
+			 EditorSceneManager.OpenScene(targetScene, OpenSceneMode.Single);
      	}
 
 		protected void CreateScene ()
