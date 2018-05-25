@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +15,7 @@ namespace SimpleTDD
         protected virtual void SetupTest(List<string> testList) { } // Can use to test scrolling
 
 
-        // 
+        //
         protected virtual void WillRunTest(string testName) { }
         protected virtual void DidRunTest(string testName) { }
 
@@ -23,12 +23,16 @@ namespace SimpleTDD
 
         void Awake()
         {
-            //mMainTestLogic = gameObject.GetComponent<TDDTest>();	
+            //mMainTestLogic = gameObject.GetComponent<TDDTest>();
             mMainTestLogic = GameObject.FindObjectOfType<TDDTest>();
+            DidAwake();
         }
 
+	    protected virtual void DidAwake() {
+		    // To be implemented
+	    }
 
-        // 
+        //
         public void RunTest(string testMethodName)
         {
             System.Type thisType = this.GetType();
@@ -42,7 +46,7 @@ namespace SimpleTDD
 
             WillRunTest(testMethodName);
 
-            // Create the given Method 
+            // Create the given Method
             theMethod.Invoke(this, null);
 
             DidRunTest(testMethodName);
@@ -79,7 +83,7 @@ namespace SimpleTDD
                     {
                         continue;
                     }
-                    //Debug.Log("Test Method: " + m.Name);	
+                    //Debug.Log("Test Method: " + m.Name);
                     result.Add(m.Name);
                 }
 
@@ -101,7 +105,7 @@ namespace SimpleTDD
                     {
                         continue;
                     }
-                    //Debug.Log("Test Method: " + m.Name);	
+                    //Debug.Log("Test Method: " + m.Name);
                     methodList.Add(m.Name);
                 }
             }
@@ -140,6 +144,17 @@ namespace SimpleTDD
                 mMainTestLogic.AppendLog(message);
             }
         }
+
+       	protected bool mPrintDebugLog = false;
+        	public bool PrintDebugLog {
+		        get {
+			        return mPrintDebugLog;
+		        }
+		        set {
+			        mPrintDebugLog = value;
+		    }
+	    }
+
     }
 
 }

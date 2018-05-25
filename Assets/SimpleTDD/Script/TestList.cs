@@ -12,7 +12,7 @@ namespace SimpleTDD
         public string[] testSceneList;
         public TestListButton buttonPrefab;
         public Transform contentPanel;
-        private ScrollRect mScrollRect;
+       // private ScrollRect mScrollRect;
 
         private List<string> mTestList = new List<string>();
         //private string[] mTestList;
@@ -28,9 +28,7 @@ namespace SimpleTDD
             //		mTestList.Add("SimpleTest2");
             //		mTestList.Add("SimpleTest3");
 
-            mScrollRect = GetComponentInChildren<ScrollRect>();
-
-
+           
             SetupTestList();
         }
 
@@ -99,14 +97,7 @@ namespace SimpleTDD
                 Vector2 size = rectTrans.sizeDelta;
                 size.y = totalHeight;
                 rectTrans.sizeDelta = size;
-                //rectTrans.
-                //contentPanel.
-
-                // TODO: Dynamic update the scroll bar
-
-                //mScrollRect.Rebuild(CanvasUpdate.Layout);
-
-
+               
 
             }
         }

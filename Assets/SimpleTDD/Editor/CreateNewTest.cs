@@ -21,10 +21,15 @@ namespace SimpleTDD
 		[MenuItem("Assets/Create/SimpleTDD/Test Object (Obsolete)")]
 		public static void SetupTest()
 		{
-			// http://answers.unity3d.com/questions/14637/get-the-currently-open-scene-name-or-file-name.html
 			Scene scene = SceneManager.GetActiveScene();
+			SetupTestForScene(scene);
+		}
 
 
+		public static void SetupTestForScene(Scene scene)
+		{
+			// http://answers.unity3d.com/questions/14637/get-the-currently-open-scene-name-or-file-name.html
+			
 			string path = Path.GetDirectoryName(scene.path);
 			string unitTestPath = path + "/UnitTest";
 
@@ -129,17 +134,17 @@ namespace SimpleTDD
 		[UnityEditor.Callbacks.DidReloadScripts]
 		private static void ScriptReloaded() 
 		{
-			Debug.Log("SimpleTDD: ScriptReloaded!!");
+			//Debug.Log("SimpleTDD: ScriptReloaded!!");
 			// If the key doesn’t exist, don’t bother, as we’re not generating stuff.
 			if (!EditorPrefs.HasKey (SCRIPT_NAME_LABEL))
 			{
-				Debug.Log("SimpleTDD Setup: script name undefined");
+				//Debug.Log("SimpleTDD Setup: script name undefined");
 				return;
 			}
 
 			if (!EditorPrefs.HasKey (OBJECT_NAME_LABEL))
 			{
-				Debug.Log("SimpleTDD Setup: object name undefined");
+				//Debug.Log("SimpleTDD Setup: object name undefined");
 				return;
 			}
 
@@ -176,7 +181,7 @@ namespace SimpleTDD
 			go.AddComponent( type );
 
 			// Save Scene
-			Scene currentActiveScene = SceneManager.GetActiveScene ();
+			Scene currentActiveScene = SceneManager.GetActiveScene ();	// ???
 			EditorSceneManager.SaveScene (currentActiveScene);
 		}
 
@@ -199,7 +204,7 @@ namespace SimpleTDD
 	using UnityEngine.UI;
 	using SimpleTDD;
 
-	public class ##name## : BaseTest {
+	public class ##name## : BaseTest {		
 		[Test]
 		public void test1()
 		{

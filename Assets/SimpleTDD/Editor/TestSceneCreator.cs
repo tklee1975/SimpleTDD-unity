@@ -5,7 +5,6 @@ using System.Collections;
 using System;
 using System.IO;
 using System.Text;
-using UnityEditor;
 using UnityEditor.SceneManagement;
 
 
@@ -16,9 +15,12 @@ using UnityEditor.SceneManagement;
 namespace SimpleTDD 
 {
 	public class TestSceneCreator : EditorWindow {
-		const string TEST_TEMPLATE = "TDDTest";
 
-		protected string mNewSceneName = "NewTest";
+
+		const string TEST_TEMPLATE = "TDDTestTemplate";
+		public TDDSetting setting;
+
+		protected string mNewSceneName = "NewTest";		//
 		protected string mTestFolder = "Test";
 
         protected readonly GUIContent mNameContent = new GUIContent ("New Scene Name");
@@ -31,6 +33,21 @@ namespace SimpleTDD
             TestSceneCreator window = GetWindow<TestSceneCreator> ();
             window.Show();
         }
+
+		/// <summary>
+		/// This function is called when the object becomes enabled and active.
+		/// </summary>
+		void OnEnable()
+		{
+			if(TDDSetting.Instance != null) {
+				mNewSceneName = TDDSetting.Instance.defaultTestName;
+				mTestFolder = TDDSetting.Instance.defaultTestFolder;
+			}
+			// if(setting != null) {
+			// 	mNewSceneName = setting.defaultTestName;
+			// 	mTestFolder = setting.defaultTestFolder;
+			// }
+		}
 
         void OnGUI ()
         {
@@ -162,13 +179,13 @@ namespace SimpleTDD
             AssetDatabase.Refresh();
 			Scene newScene = EditorSceneManager.OpenScene(newScenePath, OpenSceneMode.Single);
 
-			SetupTest();
+			SetupTest(newScene);
 
 			Close();		// Close the window
 		}
 
-		void SetupTest() {
-			CreateNewTest.SetupTest();
+		void SetupTest(Scene scene) {
+			CreateNewTest.SetupTestForScene(scene);
 		}
 	}
 	
