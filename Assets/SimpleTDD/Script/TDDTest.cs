@@ -19,6 +19,8 @@ namespace SimpleTDD
         public float buttonHeight = 30;  // 40% of Width
         public float buttonSpacing = 5;
 
+        public TDDControlPanel controlPanel;
+
 		public bool printDebugLog = true;
 
         public Dictionary<string, BaseTest> mTestDictionary = new Dictionary<string, BaseTest>();
@@ -45,6 +47,8 @@ namespace SimpleTDD
 
             // button size
             ObtainButtonSize();
+
+            SetupControlPanel();
         }
 
         protected void ObtainButtonSize()
@@ -153,7 +157,31 @@ namespace SimpleTDD
             rectTrans.sizeDelta = size;
         }
 
+        bool SetupControlPanel() {
+            if(controlPanel == null) {
+                Debug.LogError("TDDTest: controlPanel undefined");
+                return false;
+            }
+
+            controlPanel.buttonPrefab = this.subtestButtonPrefab.gameObject;
+            controlPanel.testOwner = this;
+
+            return true;
+        }
+
         private void CreateSubtestButton(List<string> testList)
+        {
+            if(SetupControlPanel() == false) {
+                return;
+            }
+
+            string[] testArray = testList.ToArray();
+            controlPanel.SetupButtons(testArray);
+            
+
+        }
+
+        private void CreateSubtestButtonOld(List<string> testList)
         {
             Vector2 position = new Vector3(0, -buttonSpacing);      // Top Left corner
 
